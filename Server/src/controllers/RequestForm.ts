@@ -1,4 +1,5 @@
 import * as express from "express"
+import * as xssFilters from "xss-filters"
 import { validationResult } from "express-validator"
 import { sendError500, sendMessage200, sendMessage404 } from "../helpers/Response";
 import { dbConfig as sequelize } from '../models/'
@@ -15,6 +16,27 @@ class RequestFormController {
         WHERE "ID_User"::text = '${req.body.ID_User}'`);
         console.log(results);
         return res.send(metadata);
+    }
+
+    public getHtmlTegDenger(req: express.Request, res: express.Response) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            return sendError500(res, 500, "Error", "You send bad parametrs");
+        }
+        return sendMessage200(res, 200, "Good result", {
+            message: `<p>${req.body.Text}</p>`
+        });
+    }
+    public getHtmlTeg(req: express.Request, res: express.Response) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            return sendError500(res, 500, "Error", "You send bad parametrs");
+        }
+        return sendMessage200(res, 200, "Good result", {
+            message: `<p>${xssFilters.inHTMLData(req.body.Text)}</p>`
+        });
     }
 
     public getUserRequest(req: express.Request, res: express.Response) {
