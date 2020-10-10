@@ -21,7 +21,6 @@ class UserController {
             console.log(errors);
             return sendError500(res, 500, "Error sign in", "Email or Password failed");
         }
-        console.log(req.body)
         User.findAll({where : {Email : req.body.Email}, raw: true}).then(response => {  
             if (response.length === 0){
                 return sendMessage404(res, 404, "User hasn't found");
@@ -46,7 +45,7 @@ class UserController {
         User.create({
             Email : req.body.Email,
             Password : req.body.Password,
-            Salt : "1231adsa"
+            Salt : "1231adsa" //TODO ADD SALT 
         }).then(response => {
             console.log(response);
             sendMessage200(res,200, "User Created", response )

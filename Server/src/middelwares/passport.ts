@@ -11,11 +11,10 @@ const usePassport = (passport : PassportStatic) => {
     }
     passport.use(
         new JwtStrategy(options, (payload, done) => {
-            console.log(payload);
             User.findAll({where : {ID_User : payload.ID_User}, raw : true})
             .then(res => {
                 if (res.length !== 0){
-                    done(null, true);
+                    done(null, res);
                 }else{
                     done(null, false);
                 }

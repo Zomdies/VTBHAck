@@ -1,5 +1,6 @@
 import * as sequelize from 'sequelize'
 import {UserFactory} from './User'
+import {RequestFormFactory} from "./RequestForm"
 import * as dotenv from "dotenv"
 dotenv.config();
 
@@ -11,6 +12,7 @@ export const dbConfig = new sequelize.Sequelize(
         port: Number(process.env.DATABASE_PORT),
         host: process.env.DATABASE_HOST,
         dialect: "postgres",
+        logging : false,
         define: {
             timestamps: false
         },
@@ -24,10 +26,7 @@ export const dbConfig = new sequelize.Sequelize(
 );
 
 export const User = UserFactory(dbConfig);
+export const RequestForm = RequestFormFactory(dbConfig);
 
-// Users have skills them lets create that relationship
 
-// User.hasMay(Skills);
-
-// // or instead of that, maybe many users have many skills
-// Skills.belongsToMany(Users, { through: "users_have_skills" });
+RequestForm.belongsTo(User, {targetKey: 'ID_User', foreignKey: 'ID_User'})
