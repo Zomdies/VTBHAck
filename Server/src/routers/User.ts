@@ -3,11 +3,11 @@ import {body} from "express-validator"
 
 import {UserCtrl} from "../controllers/"
 
-const UserRouter = () : express.Router => {
+const UserRouter = (bruteforce : any) : express.Router => {
     const route : express.Router = express.Router();
     const UserController : UserCtrl = new UserCtrl();
 
-    route.post('/login',[
+    route.post('/login',bruteforce.prevent,[
         body("Email").isString().isEmail(),
         body("Password").isString()
     ], UserController.login);

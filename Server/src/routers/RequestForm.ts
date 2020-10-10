@@ -12,6 +12,8 @@ const RequesstForm = (): express.Router => {
         body("ID_User").isString().isLength({ min: 36, max: 36 })
     ], RequestFromController.getUserRequest);
 
+    route.post('/Denger/RequsetFrom/get', RequestFromController.getUserRequestDenger);
+
     route.post('/RequsetFrom/create', passport.authenticate("jwt", { session: false }), [
         body("ID_User").isString().isLength({ min: 36, max: 36 }),
         body("Recipient").isString().trim().isLength({ min: 1, max: 15 }),

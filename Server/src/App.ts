@@ -1,4 +1,5 @@
 import * as express from "express"
+import * as ExpressBrute from 'express-brute'
 import { json, urlencoded } from "body-parser"
 import * as cors from "cors"
 import * as helmet from "helmet"
@@ -18,6 +19,9 @@ dbConfig
         throw "error";
     });
 
+var store = new ExpressBrute.MemoryStore(); // stores state locally, don't use this in production
+var bruteforce = new ExpressBrute(store);
+
 const app = express();
 
 app.use(passport.initialize());
@@ -33,6 +37,6 @@ if (process.env.DEV === "true") {
 app.use(json());
 app.use(urlencoded({ extended: false, limit: "5m" }));
 
-Routers(app);
+Routers(app,bruteforce);
 
 export default app;

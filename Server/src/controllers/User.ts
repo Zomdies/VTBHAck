@@ -12,8 +12,8 @@ import { User } from "../models"
 
 class UserController {
 
-    public constructor() {
 
+    public constructor() {
     }
     public login(req: express.Request, res: express.Response): any {
         const errors = validationResult(req);
