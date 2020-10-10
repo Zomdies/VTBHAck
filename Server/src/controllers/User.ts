@@ -25,12 +25,16 @@ class UserController {
             if (response.length === 0){
                 return sendMessage404(res, 404, "User hasn't found");
             }else{
-                const token = JWT.sign({
-                    ID_User : response[0].ID_User
-                },process.env.PRIVATE_KEY,{expiresIn : 60*60})
-                return sendMessage200(res, 200, "User has been connection", {
-                    token : `Bearer ${token}`
-                });
+                if (response[0].Password === req.body.Password){
+                    const token = JWT.sign({
+                        ID_User : response[0].ID_User
+                    },process.env.PRIVATE_KEY,{expiresIn : 60*60})
+                    return sendMessage200(res, 200, "User has been connection", {
+                        token : `Bearer ${token}`
+                    });
+                }else{
+                    return sendError500(res,500, "Error", "Error")
+                }
             }
         })
         .catch(err => {
