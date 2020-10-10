@@ -11,6 +11,7 @@ import Routers from "./routers/MainRouter"
 
 dbConfig
     .authenticate()
+    // .sync({force : true})
     .then(() => console.log("connected to db"))
     .catch((err) => {
         console.log(err);
@@ -22,9 +23,9 @@ const app = express();
 app.use(passport.initialize());
 usePassport(passport);
 
-if (process.env.DEV === "true"){
+if (process.env.DEV === "true") {
     app.use(cors());
-}else{
+} else {
     app.use(helmet());
     app.use(compression());
 }
