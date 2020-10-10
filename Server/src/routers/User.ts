@@ -12,8 +12,6 @@ const UserRouter = () : express.Router => {
         body("Password").isString()
     ], UserController.login);
 
-    route.post("/auth",[ body("code").isNumeric() ], UserController.auth);
-
     route.post("/registration", [
         body("Email").isString().isEmail(),
         body("Password").isLength({min : 10})
