@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "..\\..\\Работа\\Quentin\\Server"
 		}
 	]
 }

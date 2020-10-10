@@ -1,4 +1,5 @@
 import * as express from "express"
+import {Sequelize} from "sequelize"
 import * as dotenv from 'dotenv'
 import {readFileSync as read} from  "fs"
 import * as http from "http"
@@ -39,8 +40,14 @@ if (process.env.DEV === "true") {
     server = https.createServer(options, app);
 
 }
-
-
+const sequelize = new Sequelize("VTBHack", "postgres", "29012001", {
+    dialect: "postgres",
+    host: "localhost",
+    logging: false,
+    define: {
+        timestamps: false
+    }
+});
 server.listen(port, () => {
     console.log('We are live on ' + port + ' Date ' + new Date());
 });  
