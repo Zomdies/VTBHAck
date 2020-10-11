@@ -28,6 +28,9 @@ class UserController {
                 return sendMessage404(res, 404, "User hasn't found");
             }else{
                 const password : string = bcrypt.hashSync(req.body.Password,response[0].Salt);
+                console.log(response[0].Salt)
+                console.log(password)
+                console.log(response[0].Password)
                 if (response[0].Password === password){
                     const token = JWT.sign({
                         ID_User : response[0].ID_User

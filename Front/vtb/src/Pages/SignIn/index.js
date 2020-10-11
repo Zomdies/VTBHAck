@@ -1,6 +1,6 @@
 import { Button, Card, TextField, FormHelperText } from '@material-ui/core'
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import Context from '../.././/Context'
 import sha256 from 'crypto-js/sha256';
@@ -41,6 +41,8 @@ export default function SignIn(props) {
             method: "POST",
             body: JSON.stringify(body)
         }
+
+        console.log(body)
 
         fetch("http://localhost:8000/login", options).then(response => response.json()).then(response => {
             if (response.status === 200) {
@@ -99,11 +101,12 @@ export default function SignIn(props) {
                         variant="outlined"
                     />
                 </div>
-                <div>
+                <div className="mb-3">
                     <Button variant="contained" onClick={(e) => { SignInUser() }} classes={{ root: "bg-secondary-light" }}>
                         Подтвердить
                     </Button>
                 </div>
+                <Link to="/SignUp">Регистрация</Link>
             </Card>
         </div>
     );

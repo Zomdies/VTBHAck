@@ -33,6 +33,8 @@ export default function Payment(props) {
             body: JSON.stringify(body)
         }
 
+        console.log(body)
+
         fetch("http://localhost:8000/RequsetFrom/get", options).then(response => response.json()).then(resp => {
             if (resp.status === 200) {
                 setPayments(resp.result)
@@ -76,6 +78,8 @@ export default function Payment(props) {
             method: "POST",
             body: JSON.stringify(body)
         }
+
+        console.log(body)
 
         fetch("http://localhost:8000/RequsetFrom/create", options).then(response => response.json()).then(resp => {
             setPResult({ open: true, text: resp.message })
