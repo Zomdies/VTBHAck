@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom'
 
 export default function Payment(props) {
 
-    const { login, token, ID } = useContext(Context)
+    const { login, token, ID, dispatchLogin, dispatchToken, dispatchID } = useContext(Context)
 
     const [paymentDialog, setOpen] = useState(false);
     const [payments, setPayments] = useState([]);
@@ -88,13 +88,29 @@ export default function Payment(props) {
         })
     }
 
+    const LogOut = () =>{
+        dispatchLogin({
+            type: 'setLogin',
+            payload: false
+        })
+        dispatchToken({
+            type: 'setToken',
+            payload: null
+        })
+        dispatchID({
+            type: 'setID',
+            payload: ""
+        })
+    }
+
     if (login)
         return (
             <Fragment>
                 <div className="w-100 d-flex justify-content-center p-10 bg-primary box-sizing-border" style={{ height: "inherit" }}>
                     <div className="w-60">
                         <div className="w-100 d-flex  justify-content-end mb-2">
-                            <Button variant="contained" onClick={() => { setOpen(true) }} classes={{ root: "bg-secondary-light" }}>Новый</Button>
+                            <Button variant="contained" onClick={() => { setOpen(true) }} classes={{ root: "bg-secondary-light mr-3" }}>Новый</Button>
+                            <Button variant="contained" onClick={() => { LogOut() }} classes={{ root: "bg-secondary-light" }}>Выход</Button>
                         </div>
                         <Card>
                             <Grid container spacing={2} className="p-2">
