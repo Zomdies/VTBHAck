@@ -1,6 +1,8 @@
-import { Button, Card, Input, TextField, Dialog, DialogTitle } from '@material-ui/core'
-import React, { useState, Fragment, useContext } from 'react'
+import { Button, Card, TextField} from '@material-ui/core'
+import React, { useState} from 'react'
 import {useHistory} from 'react-router-dom'
+
+import sha256 from 'crypto-js/sha256';
 
 export default function SignUp(props) {
 
@@ -14,9 +16,13 @@ export default function SignUp(props) {
         const  password = document.getElementById("password")?.value
         const  passwordConfirm = document.getElementById("passwordConfirm")?.value
 
-        if(email.replace(" ","").length <= 5) error["email"] = {state:true,text:""}
-        if(password.replace(" ","").length <= 10) error["password"] = {state:true,text:""}
-        if(password !=  passwordConfirm && passwordConfirm.replace(" ","").length <= 5) error["passwordConfirm"] ={state:true,text:""}
+        if(email.replace(" ","").length <= 5) error["email"] = {state:true,text:"Длина почты должна составлять по крайней мере 5 символов"}
+        if(email.match(/.?@\w*\.\w*/g) === null) error["email"] = {state:true,text:"Неправильный формат почты"}
+
+        if(password.replace(" ","").length < 10) error["password"] = {state:true,text:"Длина пароля миниму 10 символов"}
+
+        if(password !==  passwordConfirm) error["passwordConfirm"] = {state:true,text:"Пароли должны совпадать"}
+        if(passwordConfirm.replace(" ","").length < 10) error["passwordConfirm"] = {state:true,text:"Длина пароля миниму 10 символов"}
 
         if(error["email"]?.state || error["password"]?.state ||  error["passwordConfirm"]?.state)
         {
@@ -26,7 +32,7 @@ export default function SignUp(props) {
 
         const body={
             "Email":  email,
-            "Password": password,
+            "Password": sha256(password).toString(),
         }
 
         const options={
@@ -39,8 +45,7 @@ export default function SignUp(props) {
         }
 
         fetch("http://localhost:8000/registration",options).then(response=>response.json()).then(resp=>{
-            console.log(resp)
-            if(resp.status == 200) history.push("/SignIn")
+            if(resp.status === 200) history.push("/SignIn")
         })
     }
   
@@ -52,8 +57,10 @@ export default function SignUp(props) {
                 </div>
                 <div className="mb-3">
                     <TextField
+                        fullWidth
                         id="email"
                         error={Boolean(errors["email"])}
+                        helperText={Boolean(errors["email"])?errors["email"].text : ""}
                         label="E-mail"
                         inputProps={{ autoComplete: "new-password" }}
                         autoComplete="current-password"
@@ -64,7 +71,8 @@ export default function SignUp(props) {
                 <div className="mb-3">
                     <TextField
                         error={Boolean(errors["password"])}
-                        helperText=""
+                        helperText={Boolean(errors["password"])?errors["password"].text : ""}
+                        fullWidth
                         id="password"
                         label="Password"
                         required
@@ -76,7 +84,9 @@ export default function SignUp(props) {
                 </div>
                 <div className="mb-3">
                     <TextField
+                        fullWidth
                         error={Boolean(errors["passwordConfirm"])}
+                        helperText={Boolean(errors["passwordConfirm"])?errors["passwordConfirm"].text : ""}
                         id="passwordConfirm"
                         label="Confirm password"
                         required

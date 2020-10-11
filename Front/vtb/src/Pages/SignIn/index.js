@@ -1,21 +1,26 @@
-import { Button, Card, Input, TextField, Dialog, DialogTitle } from '@material-ui/core'
-import React, { useState, Fragment, useContext } from 'react'
+import { Button, Card, TextField, FormHelperText } from '@material-ui/core'
+import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Context from '../.././/Context'
+import sha256 from 'crypto-js/sha256';
+
 
 export default function SignIn(props) {
 
     const [errors, setError] = useState({})
+    const [requestSummary, setSummary] = useState(null)
     const history = useHistory()
-    const { dispatchLogin, dispatchToken } = useContext(Context)
+    const { dispatchLogin, dispatchToken, dispatchID } = useContext(Context)
 
     const SignInUser = () => {
         const error = {}
         const email = document.getElementById("email")?.value
         const password = document.getElementById("password")?.value
 
-        if (email.replace(" ", "").length <= 5) error["email"] = { state: true, text: "" }
+        if(email.replace(" ","").length <= 5) error["email"] = {state:true,text:"Длина почты должна составлять по крайней мере 5 символов"}
+        if(email.match(/.?@\w*\.\w*/g) === null) error["email"] = {state:true,text:"Неправильный формат почты"}
+
         if (password.replace(" ", "").length <= 10) error["password"] = { state: true, text: "" }
 
         if (error["email"]?.state || error["password"]?.state || error["passwordConfirm"]?.state) {
@@ -25,7 +30,7 @@ export default function SignIn(props) {
 
         const body = {
             "Email": email,
-            "Password": password,
+            "Password": sha256(password).toString(),
         }
 
         const options = {
@@ -37,22 +42,27 @@ export default function SignIn(props) {
             body: JSON.stringify(body)
         }
 
-        fetch("http://localhost:8000/login", options).then(response => response.json()).then(result => {
-            console.log(result)
-            // studentsDispatch({
-            //     type: 'setStudents',
-            //     payload: result
-            // })
-            if (result.status == 200) {
+        fetch("http://localhost:8000/login", options).then(response => response.json()).then(response => {
+            if (response.status === 200) {
                 dispatchLogin({
                     type: 'setLogin',
                     payload: true
                 })
                 dispatchToken({
                     type: 'setToken',
-                    payload: result.token
+                    payload: response.result.token
+                })
+                dispatchID({
+                    type: 'setID',
+                    payload: response.result.ID_User
                 })
                 history.push("/Payment")
+            }
+            if (response.status === 500) {
+                setSummary("Неверно указаны данные")
+            }
+            if (response["error"] && !Boolean(response.status)) {
+                setSummary("Слишком много запрос, попробуйте позже")
             }
         })
     }
@@ -63,12 +73,15 @@ export default function SignIn(props) {
                 <div className="mb-3 fs-rem-6 fw-500">
                     Вход
                 </div>
+                <FormHelperText className="pb-4" error={Boolean(requestSummary)}>{requestSummary}</FormHelperText>
                 <div className="mb-3">
                     <TextField
                         id="email"
                         label="E-mail"
+                        error={Boolean(errors["email"])}
+                        helperText={Boolean(errors["email"])?errors["email"].text : ""}
                         inputProps={{ autoComplete: "new-password" }}
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         variant="outlined"
                         required
                     />
@@ -77,6 +90,8 @@ export default function SignIn(props) {
                     <TextField
                         id="password"
                         label="Password"
+                        error={Boolean(errors["password"])}
+                        helperText={Boolean(errors["password"])?errors["password"].text : ""}
                         required
                         inputProps={{ autoComplete: "new-password" }}
                         type="password"

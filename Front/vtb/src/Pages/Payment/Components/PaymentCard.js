@@ -1,27 +1,33 @@
-import React, { useState, Fragment, useContext } from 'react'
-import { Button, Card, Input, TextField, Dialog, DialogTitle, Grid } from '@material-ui/core'
+import React from 'react'
+import { Grid } from '@material-ui/core'
 
 export default function PaymentCard(props) {
 
-    const [paymentDialog, setOpen] = useState(false);
+    const { payment } = props
 
     return (
 
         <div className={`p-5 ${props.className}`}>
-            <Grid  container  spacing={2}>
-                <Grid item xs={5}>
+            <Grid container spacing={2}>
+                <Grid item xs={4}>
                     <div>
-                        4746-8487-4654-8676
+                        {payment.ID_RequestForm}
                     </div>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={3}>
                     <div>
-                        1546-8721-5678-9123
+                        {payment.Recipient}
                     </div>
                 </Grid>
                 <Grid item xs={2}>
                     <div>
-                        25000
+                        {payment.Sum}
+                    </div>
+                </Grid>
+                <Grid item xs={3}>
+                    <div>
+                        {payment.Comment}
+
                     </div>
                 </Grid>
             </Grid>
