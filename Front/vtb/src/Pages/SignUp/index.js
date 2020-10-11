@@ -32,7 +32,7 @@ export default function SignUp(props) {
 
         const body={
             "Email":  email,
-            "Password": sha256(password).toString(),
+            "Password": password,
         }
 
         const options={
@@ -44,7 +44,7 @@ export default function SignUp(props) {
             body:JSON.stringify(body)
         }
 
-        console.log(body)
+        // console.log(body)
 
         fetch("http://localhost:8000/registration",options).then(response=>response.json()).then(resp=>{
             if(resp.status === 200) history.push("/SignIn")
