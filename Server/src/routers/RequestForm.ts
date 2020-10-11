@@ -18,6 +18,7 @@ const RequesstForm = (): express.Router => {
     route.post('/RequsetFrom/HtmlTeg',[
         body("Text").isString().isLength({ min: 1, max: 150 })
     ],RequestFromController.getHtmlTeg);
+    
     route.post('/Danger/RequsetFrom/get', RequestFromController.getUserRequestDenger);
 
     route.post('/RequsetFrom/create', passport.authenticate("jwt", { session: false }), [
