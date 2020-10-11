@@ -142,6 +142,7 @@ export default function Payment(props) {
                         <div className="mb-3">
                             <TextField
                                 id="userID"
+                                value={ID}
                                 error={Boolean(errors["user"])}
                                 fullWidth
                                 helperText={Boolean(errors["user"]) ? errors["user"].text : ""}
