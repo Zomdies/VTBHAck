@@ -48,6 +48,8 @@ if (process.env.DEV === "true") {
 //         timestamps: false
 //     }
 // });
+import * as CryptoJS from 'crypto-js'
 server.listen(port, () => {
+    console.log(CryptoJS.SHA256("pass12321312123").toString());
     console.log('We are live on ' + port + ' Date ' + new Date());
 });  

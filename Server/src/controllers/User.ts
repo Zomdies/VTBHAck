@@ -1,4 +1,6 @@
 import * as express from "express"
+import * as bcrypt from "bcryptjs"
+import * as CryptoJS from 'crypto-js'
 import * as JWT from 'jsonwebtoken'
 import { validationResult } from "express-validator"
 import * as dotenv from "dotenv"
@@ -25,7 +27,8 @@ class UserController {
             if (response.length === 0){
                 return sendMessage404(res, 404, "User hasn't found");
             }else{
-                if (response[0].Password === req.body.Password){
+                const password : string = bcrypt.hashSync(req.body.Password,response[0].Salt);
+                if (response[0].Password === password){
                     const token = JWT.sign({
                         ID_User : response[0].ID_User
                     },process.env.PRIVATE_KEY,{expiresIn : 60*60})
@@ -47,13 +50,19 @@ class UserController {
         const errors = validationResult(req);
         if (!errors.isEmpty())
             return sendError500(res, 500, "Error", "You send bad parametrs");
+        const salt : string = bcrypt.genSaltSync(10);
+        const passwordHash : string = CryptoJS.SHA256(req.body.Password).toString();
+        const password : string = bcrypt.hashSync(passwordHash,salt);
         User.create({
             Email : req.body.Email,
-            Password : req.body.Password,
-            Salt : "1231adsa" //TODO ADD SALT 
+            Password :  password,
+            Salt : salt
         }).then(response => {
-            console.log(response);
             sendMessage200(res,200, "User Created", response )
+        })
+        .catch(err => {
+            console.log(err);
+            return sendError500(res,500,"Error", "Error database");
         })
 
     }
