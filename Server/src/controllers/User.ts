@@ -58,7 +58,7 @@ class UserController {
             Password :  password,
             Salt : salt
         }).then(response => {
-            sendMessage200(res,200, "User Created", response )
+            sendMessage200(res,200, "User Created")
         })
         .catch(err => {
             console.log(err);
