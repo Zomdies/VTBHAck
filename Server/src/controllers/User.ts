@@ -30,6 +30,7 @@ class UserController {
                         ID_User : response[0].ID_User
                     },process.env.PRIVATE_KEY,{expiresIn : 60*60})
                     return sendMessage200(res, 200, "User has been connection", {
+                        ID_User : response[0].ID_User,
                         token : `Bearer ${token}`
                     });
                 }else{
