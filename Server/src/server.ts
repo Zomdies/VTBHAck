@@ -40,16 +40,7 @@ if (process.env.DEV === "true") {
     server = https.createServer(options, app);
 
 }
-// const sequelize = new Sequelize("VTBHack", "postgres", "29012001", {
-//     dialect: "postgres",
-//     host: "localhost",
-//     logging: false,
-//     define: {
-//         timestamps: false
-//     }
-// });
-import * as CryptoJS from 'crypto-js'
+
 server.listen(port, () => {
-    console.log(CryptoJS.SHA256("pass12321312123").toString());
     console.log('We are live on ' + port + ' Date ' + new Date());
 });  
